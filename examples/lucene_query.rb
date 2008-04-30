@@ -10,6 +10,14 @@ describe LuceneQuery do
     lambda { false }.should generate_query("false")
   end
   
+  it "should cope with empty Arrays" do
+    lambda { SolrQuery.new { Array.new }.to_s }.should_not raise_error
+  end
+  
+  it "should cope with empty Hashes" do
+    lambda { SolrQuery.new { Hash.new }.to_s }.should_not raise_error
+  end
+  
   it "should quote Strings" do
     lambda { "example" }.should generate_query("'example'")
   end
@@ -42,7 +50,7 @@ describe LuceneQuery do
   end
   
   it "should AND together Hash terms" do
-    lambda { { :city => "Portland", :state => "Oregon" } }.should generate_query("(state:'Oregon' AND city:'Portland')")
+    lambda { { :city => "Portland", :state => "Oregon" } }.should generate_query("(city:'Portland' AND state:'Oregon')")
   end
   
   it "should OR together IN terms" do
