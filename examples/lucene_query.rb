@@ -14,6 +14,16 @@ describe LuceneQuery do
     lambda { "example" }.should generate_query("'example'")
   end
   
+  it "should escape Strings" do
+    lambda { "this || that" }.should generate_query("'this \\|| that'")
+    lambda { "this && that" }.should generate_query("'this \\&& that'")
+    lambda { "Query builder for the Lucene (and Solr) search engine." }.should generate_query("'Query builder for the Lucene \\(and Solr\\) search engine.'")
+    lambda { "~jvoorhis" }.should generate_query("'\\~jvoorhis'")
+    lambda { "-spam" }.should generate_query("'\\-spam'")
+    lambda { "+ham" }.should generate_query("'\\+ham'")
+    lambda { '\d{10}' }.should generate_query("'\\\\d\\{10\\}'")
+  end
+  
   it "should group Arrays" do
     lambda { [:red, :green, :blue] }.should generate_query("(red green blue)")
   end
