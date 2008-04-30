@@ -2,7 +2,14 @@ class LuceneQuery
   ## Syntax Nodes
   ::String.class_eval do
     def to_lucene; "'#{escape_lucene}'" end
-    def parens; "(#{self})" end
+    
+    def parens
+      if self =~ /^\s*$/
+        self
+      else
+        "(#{self})"
+      end
+    end
     
     # The Lucene documentation declares special characters to be:
     #   + - && || ! ( ) { } [ ] ^ " ~ * ? : \
