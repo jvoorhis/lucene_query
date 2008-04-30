@@ -3,8 +3,18 @@ class LuceneQuery
   ::String.class_eval do
     def to_lucene; "'#{escape_lucene}'" end
     def parens; "(#{self})" end
+    
+    # The Lucene documentation declares special characters to be:
+    #   + - && || ! ( ) { } [ ] ^ " ~ * ? : \
+    RE_LUCENE_ESCAPE = /
+      ( [-+!\(\)\{\}\[\]^"~*?:\\] # A special character
+      | &&                        # Boolean &&
+      | \|\|                      # Boolean ||
+      )
+    /x unless defined?(RE_LUCENE_ESCAPE)
+    
     def escape_lucene
-      gsub(/([-+!\(\)\{\}\[\]^"~*?:\\]|&&|\|\|)/) { |m| "\\#{m}" }
+      gsub(RE_LUCENE_ESCAPE) { |m| "\\#{m}" }
     end
   end
   
