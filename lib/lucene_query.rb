@@ -6,15 +6,15 @@ class LuceneQuery
     
     # The Lucene documentation declares special characters to be:
     #   + - && || ! ( ) { } [ ] ^ " ~ * ? : \
-    RE_LUCENE_ESCAPE = /
+    RE_ESCAPE_LUCENE = /
       ( [-+!\(\)\{\}\[\]^"~*?:\\] # A special character
       | &&                        # Boolean &&
       | \|\|                      # Boolean ||
       )
-    /x unless defined?(RE_LUCENE_ESCAPE)
+    /x unless defined?(RE_ESCAPE_LUCENE)
     
     def escape_lucene
-      gsub(RE_LUCENE_ESCAPE) { |m| "\\#{m}" }
+      gsub(RE_ESCAPE_LUCENE) { |m| "\\#{m}" }
     end
   end
   
@@ -24,8 +24,7 @@ class LuceneQuery
   
   ::Array.class_eval do
     def to_lucene
-      hd, *tl = self
-      tl.inject(hd.to_lucene) { |q,t| q + " " + t.to_lucene }.parens
+      map { |t| t.to_lucene }.inject { |a,b| a + " " + b }.parens
     end
   end
   
@@ -58,22 +57,21 @@ class LuceneQuery
     end
   end
   
-  class BooleanOperator
+  class InfixOperator
     def initialize(*terms) @terms = terms end
     
     def to_lucene
-      hd, *tl = @terms
-      tl.inject(hd.to_lucene) { |q,t|
-        q + " " + operator + " " + t.to_lucene
+      @terms.map { |t| t.to_lucene }.inject { |q,t|
+        q + " " + operator + " " + t
       }.parens
     end
   end
   
-  class And < BooleanOperator
+  class And < InfixOperator
     def operator; "AND" end
   end
   
-  class Or < BooleanOperator
+  class Or < InfixOperator
     def operator; "OR" end
   end
   
