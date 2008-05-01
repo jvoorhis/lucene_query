@@ -105,18 +105,28 @@ class LuceneQuery
   end
   
   ## DSL Helpers
-  def Field(key, val) Field.new(key, val) end
-  def And(*terms) And.new(*terms) end
-  def Or(*terms) Or.new(*terms) end
-  def In(field, terms)
-    Or.new(*terms.map { |term| Field.new(field, term) })
+  class QueryBuilder
+    def self.generate(*args, &block)
+      new.generate(*args, &block)
+    end
+    
+    def generate(&block)
+      instance_eval(&block)
+    end
+    
+    def Field(key, val) Field.new(key, val) end
+    def And(*terms) And.new(*terms) end
+    def Or(*terms) Or.new(*terms) end
+    def In(field, terms)
+      Or.new(*terms.map { |term| Field.new(field, term) })
+    end
+    def Not(term) Not.new(term) end
+    def Required(term) Required.new(term) end
+    def Prohibit(term) Prohibit.new(term) end
   end
-  def Not(term) Not.new(term) end
-  def Required(term) Required.new(term) end
-  def Prohibit(term) Prohibit.new(term) end
   
   def initialize(&block)
-    @term = instance_eval(&block)
+    @term = QueryBuilder.generate(&block)
   end
   
   def to_s; @term.to_lucene end
