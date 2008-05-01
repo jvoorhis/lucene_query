@@ -31,7 +31,7 @@ class LuceneQuery
   
   ::Array.class_eval do
     def to_lucene
-      map { |t| t.to_lucene }.inject { |a,b| a + " " + b }.to_s.parens
+      map { |t| t.to_lucene }.join(" ").parens
     end
   end
   
@@ -68,9 +68,7 @@ class LuceneQuery
     def initialize(*terms) @terms = terms end
     
     def to_lucene
-      @terms.map { |t| t.to_lucene }.inject { |q,t|
-        q + " " + operator + " " + t
-      }.to_s.parens
+      @terms.map { |t| t.to_lucene }.join(" #{operator} ").parens
     end
   end
   
