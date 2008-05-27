@@ -104,6 +104,18 @@ class LuceneQuery
     end
   end
   
+  class Fuzzy
+    def initialize(term, boost=nil)
+      @term, @boost = term, boost
+    end
+    
+    def to_lucene
+      @term.split(/\s+/).map { |t|
+        @boost ? "%s~%1.1f" % [t, @boost] : "%s~" % t
+      } * " "
+    end
+  end
+  
   ## DSL Helpers
   class QueryBuilder
     def self.generate(*args, &block)
@@ -123,6 +135,7 @@ class LuceneQuery
     def Not(term) Not.new(term) end
     def Required(term) Required.new(term) end
     def Prohibit(term) Prohibit.new(term) end
+    def Fuzzy(*args) Fuzzy.new(*args) end
   end
   
   def initialize(&block)

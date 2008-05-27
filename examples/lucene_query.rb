@@ -66,6 +66,12 @@ describe LuceneQuery do
     lambda { Prohibit("bugs") }.should generate_query("-'bugs'")
     lambda { { :marine_life => [Required("fish"), Prohibit("eels")] } }.should generate_query("(marine_life:(+'fish' -'eels'))")
   end
+  
+  it "should produce fuzzy terms" do
+    lambda { Fuzzy("term") }.should generate_query("term~")
+    lambda { Fuzzy("multiple terms") }.should generate_query("multiple~ terms~")
+    lambda { Fuzzy("term", 0.7) }.should generate_query("term~0.7")
+  end
 end
 
 class QueryMatcher
