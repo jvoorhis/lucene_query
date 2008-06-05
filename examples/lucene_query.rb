@@ -71,6 +71,7 @@ describe LuceneQuery do
     lambda { Fuzzy("term") }.should generate_query("term~")
     lambda { Fuzzy("multiple terms") }.should generate_query("multiple~ terms~")
     lambda { Fuzzy("term", 0.7) }.should generate_query("term~0.7")
+    lambda { Fuzzy("*") }.should generate_query("\\*~")
   end
 end
 

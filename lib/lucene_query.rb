@@ -111,7 +111,7 @@ class LuceneQuery
     
     def to_lucene
       @term.split(/\s+/).map { |t|
-        @boost ? "%s~%1.1f" % [t, @boost] : "%s~" % t
+        @boost ? "%s~%1.1f" % [t.escape_lucene, @boost] : "%s~" % t.escape_lucene
       } * " "
     end
   end
