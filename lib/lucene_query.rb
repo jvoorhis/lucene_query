@@ -80,6 +80,14 @@ class LuceneQuery
     def operator; "OR" end
   end
   
+  class To < InfixOperator
+    def operator; "TO" end
+    
+    def to_lucene
+      "[#{super}]"
+    end
+  end
+  
   class Not
     def initialize(term) @term = term end
     
@@ -132,6 +140,7 @@ class LuceneQuery
     def In(field, terms)
       Or.new(*terms.map { |term| Field.new(field, term) })
     end
+    def To(*terms) To.new(*terms) end
     def Not(term) Not.new(term) end
     def Required(term) Required.new(term) end
     def Prohibit(term) Prohibit.new(term) end

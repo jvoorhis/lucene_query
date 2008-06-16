@@ -73,6 +73,10 @@ describe LuceneQuery do
     lambda { Fuzzy("term", 0.7) }.should generate_query("term~0.7")
     lambda { Fuzzy("*") }.should generate_query("\\*~")
   end
+  
+  it "should produce a range query" do
+    lambda { To("here", "eternity").should generate_query("['here' TO 'eternity']") }
+  end
 end
 
 class QueryMatcher
