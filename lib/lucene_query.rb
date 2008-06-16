@@ -81,12 +81,16 @@ class LuceneQuery
   end
   
   class To
-    def initialize(term_1, term_2)
-      @term_1, @term_2 = term_1, term_2 
+    def initialize(term_1, term_2, exclusive = false)
+      @term_1, @term_2, @exclusive = term_1, term_2, exclusive
     end
     
     def to_lucene
-      "[#{@term_1} TO #{@term_2}]"
+      if @exclusive
+        "{#{@term_1} TO #{@term_2}}"
+      else
+        "[#{@term_1} TO #{@term_2}]"
+      end
     end
   end
   
@@ -142,7 +146,7 @@ class LuceneQuery
     def In(field, terms)
       Or.new(*terms.map { |term| Field.new(field, term) })
     end
-    def To(term_1, term_2) To.new(term_1, term_2) end
+    def To(term_1, term_2, exclusive = false) To.new(term_1, term_2, exclusive) end
     def Not(term) Not.new(term) end
     def Required(term) Required.new(term) end
     def Prohibit(term) Prohibit.new(term) end

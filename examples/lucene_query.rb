@@ -74,8 +74,12 @@ describe LuceneQuery do
     lambda { Fuzzy("*") }.should generate_query("\\*~")
   end
   
-  it "should produce a range query" do
-    lambda { To("here", "eternity").should generate_query("[here TO eternity]") }
+  it "should produce an inclusive range query by default" do
+    lambda { To("here", "eternity") }.should generate_query("[here TO eternity]")
+  end
+
+  it "should optionally produce an exclusive range query" do
+    lambda { To("soup", "nuts", true) }.should generate_query("{soup TO nuts}")
   end
 end
 
