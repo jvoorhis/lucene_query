@@ -80,11 +80,13 @@ class LuceneQuery
     def operator; "OR" end
   end
   
-  class To < InfixOperator
-    def operator; "TO" end
+  class To
+    def initialize(term_1, term_2)
+      @term_1, @term_2 = term_1, term_2 
+    end
     
     def to_lucene
-      "[#{super}]"
+      "[#{@term_1} TO #{@term_2}]"
     end
   end
   

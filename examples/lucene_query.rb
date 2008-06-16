@@ -75,7 +75,7 @@ describe LuceneQuery do
   end
   
   it "should produce a range query" do
-    lambda { To("here", "eternity").should generate_query("['here' TO 'eternity']") }
+    lambda { To("here", "eternity").should generate_query("[here TO eternity]") }
   end
 end
 
