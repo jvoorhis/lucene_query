@@ -142,7 +142,7 @@ class LuceneQuery
     def In(field, terms)
       Or.new(*terms.map { |term| Field.new(field, term) })
     end
-    def To(*terms) To.new(*terms) end
+    def To(term_1, term_2) To.new(term_1, term_2) end
     def Not(term) Not.new(term) end
     def Required(term) Required.new(term) end
     def Prohibit(term) Prohibit.new(term) end
