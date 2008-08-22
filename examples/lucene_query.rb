@@ -32,6 +32,12 @@ describe LuceneQuery do
     lambda { '\d{10}' }.should generate_query("'\\\\d\\{10\\}'")
   end
   
+  it "should downcase incorrectly-located keywords" do
+    lambda { "Me AND" }.should generate_query("'Me and'")
+    lambda { "You OR" }.should generate_query("'You or'")
+    lambda { "Maybe NOT" }.should generate_query("'Maybe not'")
+  end
+
   it "should group Arrays" do
     lambda { [:red, :green, :blue] }.should generate_query("(red green blue)")
   end
@@ -42,6 +48,10 @@ describe LuceneQuery do
   
   it "should join terms with OR" do
     lambda { Or(:symbol, 42, "string") }.should generate_query("(symbol OR 42 OR 'string')")
+  end
+  
+  it "should negate a term with NOT" do
+    lambda { Not("me") }.should generate_query("NOT 'me'")
   end
   
   it "should support fields" do

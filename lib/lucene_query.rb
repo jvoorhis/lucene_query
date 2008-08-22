@@ -1,7 +1,7 @@
 class LuceneQuery
   ## Syntax Nodes
   ::String.class_eval do
-    def to_lucene; "'#{escape_lucene}'" end
+    def to_lucene; "'#{escape_lucene.downcase_ending_keywords}'" end
     
     def parens
       if self =~ /^\s*$/
@@ -23,6 +23,12 @@ class LuceneQuery
     def escape_lucene
       gsub(RE_ESCAPE_LUCENE) { |m| "\\#{m}" }
     end
+
+    ENDING_KEYWORDS = /(AND$ | OR$ | NOT$)/x unless defined?(ENDING_KEYWORDS)
+
+    def downcase_ending_keywords
+      gsub(ENDING_KEYWORDS) { |w| w.downcase }
+    end    
   end
   
   ::Symbol.class_eval do
