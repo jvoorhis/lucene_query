@@ -60,7 +60,10 @@ describe LuceneQuery do
   end
   
   it "should AND together Hash terms" do
-    lambda { { :city => "Portland", :state => "Oregon" } }.should generate_query("(state:'Oregon' AND city:'Portland')")
+    t1 = /state:'Oregon'/
+    t2 = /city:'Portland'/
+    re = /\((#{t1} AND #{t2}|#{t2} AND #{t1})\)/
+    lambda { { :city => "Portland", :state => "Oregon" } }.should generate_query(re)
   end
   
   it "should OR together IN terms" do
@@ -101,11 +104,11 @@ class QueryMatcher
   def matches?(target)
     @target = target
     @actual = LuceneQuery.new(&@target).to_s
-    @expected == @actual
+    @expected === @actual
   end
   
   def failure_message
-    "\tExpected\n#@expected\n\tbut received\n#@actual"
+    "Expected\n\t#@expected\nbut received\n\t#@actual"
   end
 end
 
