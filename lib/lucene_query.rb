@@ -60,6 +60,14 @@ class LuceneQuery
     def to_lucene; to_s end
   end
   
+  ::Range.class_eval do
+    def ~@; To.new(first, last, true) end
+    
+    def to_lucene
+      To.new(first, last).to_lucene
+    end
+  end
+  
   class Field
     def initialize(key, val)
       @key, @val = key, val
@@ -90,6 +98,8 @@ class LuceneQuery
     def initialize(term_1, term_2, exclusive = false)
       @term_1, @term_2, @exclusive = term_1, term_2, exclusive
     end
+    
+    def ~@; self.class.new(@term_1, @term_2, !@exclusive) end
     
     def to_lucene
       if @exclusive
