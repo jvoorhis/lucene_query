@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.name          = "lucene_query"
   s.version       = "0.1"
   s.author        = "Jeremy Voorhis"
-  s.email         = "jvoorhis@elevatedrails.com"
-  s.homepage      = "http://www.elevatedrails.com/"
+  s.email         = "jvoorhis@jvoorhis.com"
+  s.homepage      = "http://www.jvoorhis.com/"
   s.platform      = Gem::Platform::RUBY
   s.summary       = "Query builder for the Lucene (and Solr) search engine."
   s.files         = %w[ MIT-LICENSE
