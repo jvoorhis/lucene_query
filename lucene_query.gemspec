@@ -1,5 +1,3 @@
-require 'rubygems'
-
 Gem::Specification.new do |s|
   s.name          = "lucene_query"
   s.version       = "0.1"
